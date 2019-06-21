@@ -8,11 +8,12 @@ import threading
 #     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
 
 search_url = 'http://so.hao6v.com/e/search/index.php'
+base_url = 'http://so.hao6v.com'
 
 def second_search(tt_res, k, url):
     res = {}
     try:
-        resp = requests.get(url, timeout=5)
+        resp = requests.get(base_url + url, timeout=5)
         if resp.status_code == 200:
             decode_resp = resp.content.decode("gb18030", "ignore")
             decode_resp = re.sub('\r\n', '', decode_resp)
