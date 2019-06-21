@@ -1,0 +1,1 @@
+pyinstaller -F -i search.ico movie_search.py

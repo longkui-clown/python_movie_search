@@ -9,6 +9,7 @@ import threading
 
 search_url = 'http://so.hao6v.com/e/search/index.php'
 base_url = 'http://so.hao6v.com'
+save_file_name = 'movies.txt'
 
 def second_search(tt_res, k, url):
     res = {}
@@ -114,17 +115,24 @@ def first_search(movie_name):
 #     return space_addition
 
 def search_movie(movie_name):
+    save_in_file = input("写入文件？（y/n）（回车默认为y）: \n")
+    save_in_file = not (bool(save_in_file) & ((save_in_file == 'n') | (save_in_file == 'no')))
+    if save_in_file :
+        append_file = input("追加文件？（y/n）（回车默认为y (y，追加, n, 覆盖)）: \n")
+        append_file = not (bool(append_file) & ((append_file == 'n') | (append_file == 'no')))
+    else:
+        append_file = True
     res = first_search(movie_name)
     print("共查找到 " + str(res["num"]) + "个结果：")
     if res["num"] > 0:
-        print(generate_res(res["res"]))
+        print(generate_res(res["res"], save_in_file, append_file))
 
     print("")
     print("-------ok-------\n\n")
 
 
 
-def generate_res(find_movies):
+def generate_res(find_movies, save_in_file, append_file):
     ks = list(find_movies.keys())
     while 1:
         try:
@@ -134,8 +142,19 @@ def generate_res(find_movies):
                 break
 
             elif (eval(choose_index) <= len(ks)) and (eval(choose_index) > 0):
-                print(format_links(ks[eval(choose_index) - 1], find_movies[ks[eval(choose_index) - 1]]))
-                print("\n*********** 格式化完成 ***********")
+                data = format_links(ks[eval(choose_index) - 1], find_movies[ks[eval(choose_index) - 1]])
+                print(data)
+                if save_in_file:
+                    if append_file :
+                        mod = 'a+'
+                    else:
+                        mod = 'w+'
+                    with open('./{0}'.format(save_file_name), mod) as f:
+                        break_line = "".ljust(150, "-") + '\n'
+                        f.write(data + break_line + break_line + break_line)
+                        print("\n*********** 格式化完成（已写入文件） ***********")
+                else:
+                    print("\n*********** 格式化完成 ***********")
         except:
             ""
 
